@@ -10,6 +10,7 @@ import os
 
 GPHOTO = 'gphoto2'
 VIEW_FILE = 'view.html'
+TMP_FILE = 'view_tmp.html'
 IMG_FORMAT = 'img%05d.jpg'
 TMP_FORMAT = 'tmp%05d.jpg'
 
@@ -28,7 +29,7 @@ def wait(process1, process2):
 
 def write_html(images, background_color='fff'):
     '''Writes out an html file showing the given list of images.'''
-    f = open(VIEW_FILE, 'w')
+    f = open(TMP_FILE, 'w')
     f.write('''<!doctype html>
 <html><head><META HTTP-EQUIV="refresh" CONTENT="1"><style>
 body {{ text-align:center; background-color:#{color}; }}
@@ -38,6 +39,7 @@ div {{ float:left; width:48%; }}
         f.write('<div>{img}<br><img src="{img}" width="100%"></div>'.format(img=image))
     f.write('</body></html>')
     f.close()
+    os.rename(TMP_FILE, VIEW_FILE)
 
 def show(img_num, background_color='fff'):
     '''Update the html file to show the given left-side image, the
