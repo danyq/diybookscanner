@@ -43,12 +43,12 @@ div {{ float:left; width:48%; }}
 
 def show(img_num, background_color='fff'):
     '''Update the html file to show the given left-side image, the
-    corresponding right-side image, and the previous pair of images if
+    corresponding right-side image, and the previous pair of images ifIMG_FORMAT
     applicable. The provided image number must be even (for the left
     side).'''
     assert img_num % 2 == 0
     if img_num < 2:
-        write_html([IMG_FORMAT % 0, IMG_FORMAT % 1], background_color)
+	write_html([IMG_FORMAT % 0, IMG_FORMAT % 1], background_color)
     else:
         write_html([IMG_FORMAT % img_num, IMG_FORMAT % (img_num + 1),
                     IMG_FORMAT % (img_num - 2), IMG_FORMAT % (img_num - 1)],
@@ -89,15 +89,24 @@ while True:
         os.remove(TMP_FORMAT % 1)
         os.remove(VIEW_FILE)
         break
-    elif x == '':  # take next picture
+    if x == '':  # take next picture
         p1 = snap(left_cam, IMG_FORMAT % img_num)
         p2 = snap(right_cam, IMG_FORMAT % (img_num + 1))
         show(img_num, 'f99')  # red background: cameras not ready
         wait(p1, p2)
         show(img_num, '9f9')  # green background: cameras ready
-        img_num += 2
-    elif x == 'x':  # back up
-        img_num -= 4
-        show(img_num)
-    else:  # assume x is an image number to jump to
+	rightpic = "img" + str(img_num).zfill(5) + ".jpg"
+	leftpic = "img" + str(img_num+1).zfill(5) + ".jpg"
+	os.system("jpegtran -rot 270 "+rightpic+" > opt-" + rightpic)
+	os.system("cp opt-"+rightpic+" "+rightpic)
+	os.system("rm opt-"+rightpic)
+	os.system("jpegtran -rot 90 "+leftpic+" > opt-" + leftpic)
+	os.system("cp opt-"+leftpic+" "+leftpic)
+	os.system("rm opt-"+leftpic)
+	img_num += 2
+        continue
+    try:  # assume x is an image number to jump to
         img_num = int(x) // 2 * 2  # convert to even number
+    except ValueError:
+        print 'unrecognized command'
+        continue
