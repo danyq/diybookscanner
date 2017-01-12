@@ -95,10 +95,9 @@ while True:
         show(img_num, 'f99')  # red background: cameras not ready
         wait(p1, p2)
         show(img_num, '9f9')  # green background: cameras ready
+        img_num += 2
     elif x == 'x':  # back up
         img_num -= 4
         show(img_num)
     else:  # assume x is an image number to jump to
         img_num = int(x) // 2 * 2  # convert to even number
-        show(img_num)
-    img_num += 2
